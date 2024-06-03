@@ -6,6 +6,7 @@ import cors from 'cors';
 import userRoutes from './routes/users';
 import houseRoutes from './routes/houses'; // 导入房子路由
 import roomRoutes from './routes/rooms'; // 导入房间路由
+import deviceRoutes from './routes/devices'; // 导入设备路由
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(bodyParser.json());
 app.use('/api/users', userRoutes);
 app.use('/api/houses', houseRoutes);
 app.use('/api/rooms', roomRoutes); // 使用房间路由
+app.use('/api/devices', deviceRoutes); // 使用设备路由
 
 const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/your-database-name';
 mongoose.connect(uri)

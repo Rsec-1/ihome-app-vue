@@ -10,6 +10,13 @@ const generateRandomNickname = () => {
 export const registerUser = async (req: Request, res: Response) => {
     try {
         const { username, password, email, nickname } = req.body;
+
+        // 检查用户名是否已经存在
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ success: false, message: '用户名已存在' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
         const generatedNickname = nickname || generateRandomNickname();
         const user = new User({ username, password: hashedPassword, email, nickname: generatedNickname });

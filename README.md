@@ -7,7 +7,7 @@
 
 1. **用户注册**
    - 方法：POST
-   - URL: `http://localhost:5000/api/users/register`
+   - URL: `http://localhost:3000/api/users/register`
    - Body (JSON):
      ```json
      {
@@ -20,7 +20,7 @@
 
 2. **用户登录**
    - 方法：POST
-   - URL: `http://localhost:5000/api/users/login`
+   - URL: `http://localhost:3000/api/users/login`
    - Body (JSON):
      ```json
      {
@@ -31,7 +31,7 @@
 
 3. **更新用户信息**
    - 方法：PUT
-   - URL: `http://localhost:5000/api/users/update`
+   - URL: `http://localhost:3000/api/users/update`
    - Body (JSON):
      ```json
      {
@@ -43,7 +43,7 @@
 
 4. **更新用户密码**
    - 方法：PUT
-   - URL: `http://localhost:5000/api/users/updatePassword`
+   - URL: `http://localhost:3000/api/users/updatePassword`
    - Body (JSON):
      ```json
      {
@@ -55,8 +55,14 @@
 
 4. **删除用户**
    - 方法：DELETE
-   - URL: `http://localhost:5000/api/users/delete/{userId}`
-   - 示例: `http://localhost:5000/api/users/delete/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/users/delete/{userId}`
+   - 示例: `http://localhost:3000/api/users/delete/60d2c6b60c5d2c7f1c8e2b7b`
+   - 无需 Body
+
+5. **获取所有用户**
+   - 方法：GET
+   - URL: `http://localhost:3000/api/users/all`
+   - 示例: `http://localhost:3000/api/users/all`
    - 无需 Body
 
 通过这些步骤，你可以在 Postman 中测试删除用户的功能。
@@ -65,13 +71,13 @@
 
 1. **获取用户所有房子**
    - 方法：GET
-   - URL: `http://localhost:5000/api/houses/user/{userId}`
-   - 示例: `http://localhost:5000/api/houses/user/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/houses/user/{userId}`
+   - 示例: `http://localhost:3000/api/houses/user/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 2. **添加房子**
    - 方法：POST
-   - URL: `http://localhost:5000/api/houses/add`
+   - URL: `http://localhost:3000/api/houses/add`
    - Body (JSON):
      ```json
      {
@@ -83,13 +89,13 @@
 
 3. **删除房子**
    - 方法：DELETE
-   - URL: `http://localhost:5000/api/houses/delete/{houseId}`
-   - 示例: `http://localhost:5000/api/houses/delete/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/houses/delete/{houseId}`
+   - 示例: `http://localhost:3000/api/houses/delete/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 4. **更新房子**
    - 方法：PUT
-   - URL: `http://localhost:5000/api/houses/update`
+   - URL: `http://localhost:3000/api/houses/update`
    - Body (JSON):
      ```json
      {
@@ -103,7 +109,7 @@
 
 1. **添加房间**
    - 方法：POST
-   - URL: `http://localhost:5000/api/rooms/add`
+   - URL: `http://localhost:3000/api/rooms/add`
    - Body (JSON):
      ```json
      {
@@ -114,13 +120,13 @@
 
 2. **删除房间**
    - 方法：DELETE
-   - URL: `http://localhost:5000/api/rooms/delete/{roomId}`
-   - 示例: `http://localhost:5000/api/rooms/delete/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/rooms/delete/{roomId}`
+   - 示例: `http://localhost:3000/api/rooms/delete/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 3. **更新房间**
    - 方法：PUT
-   - URL: `http://localhost:5000/api/rooms/update`
+   - URL: `http://localhost:3000/api/rooms/update`
    - Body (JSON):
      ```json
      {
@@ -131,15 +137,15 @@
 
 4. **获取房子的所有房间**
    - 方法：GET
-   - URL: `http://localhost:5000/api/rooms/house/{houseId}`
-   - 示例: `http://localhost:5000/api/rooms/house/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/rooms/house/{houseId}`
+   - 示例: `http://localhost:3000/api/rooms/house/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 ### 设备模型
 
 1. **添加设备**
    - 方法：POST
-   - URL: `http://localhost:5000/api/devices/add`
+   - URL: `http://localhost:3000/api/devices/add`
    - Body (JSON):
      ```json
      {
@@ -154,13 +160,13 @@
 
 2. **删除设备**
    - 方法：DELETE
-   - URL: `http://localhost:5000/api/devices/delete/{deviceId}`
-   - 示例: `http://localhost:5000/api/devices/delete/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/devices/delete/{deviceId}`
+   - 示例: `http://localhost:3000/api/devices/delete/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 3. **更新设备**
    - 方法：PUT
-   - URL: `http://localhost:5000/api/devices/update`
+   - URL: `http://localhost:3000/api/devices/update`
    - Body (JSON):
      ```json
      {
@@ -176,19 +182,19 @@
 
 4. **获取房间所有设备**
    - 方法：GET
-   - URL: `http://localhost:5000/api/devices/room/{roomId}`
-   - 示例: `http://localhost:5000/api/devices/room/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/devices/room/{roomId}`
+   - 示例: `http://localhost:3000/api/devices/room/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 5. **获取设备详情**
    - 方法：GET
-   - URL: `http://localhost:5000/api/devices/details/{deviceId}`
-   - 示例: `http://localhost:5000/api/devices/details/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/devices/details/{deviceId}`
+   - 示例: `http://localhost:3000/api/devices/details/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 6. **远程控制设备**
    - 方法：POST
-   - URL: `http://localhost:5000/api/devices/control`
+   - URL: `http://localhost:3000/api/devices/control`
    - Body (JSON):
      ```json
      {
@@ -203,7 +209,7 @@
 
 1. **添加场景**
    - 方法：POST
-   - URL: `http://localhost:5000/api/scenes/add`
+   - URL: `http://localhost:3000/api/scenes/add`
    - Body (JSON):
      ```json
      {
@@ -227,13 +233,13 @@
 
 2. **删除场景**
    - 方法：DELETE
-   - URL: `http://localhost:5000/api/scenes/delete/{sceneId}`
-   - 示例: `http://localhost:5000/api/scenes/delete/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/scenes/delete/{sceneId}`
+   - 示例: `http://localhost:3000/api/scenes/delete/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 3. **更新场景**
    - 方法：PUT
-   - URL: `http://localhost:5000/api/scenes/update`
+   - URL: `http://localhost:3000/api/scenes/update`
    - Body (JSON):
      ```json
      {
@@ -257,8 +263,8 @@
 
 4. **获取用户所有场景**
    - 方法：GET
-   - URL: `http://localhost:5000/api/scenes/user/{userId}`
-   - 示例: `http://localhost:5000/api/scenes/user/60d2c6b60c5d2c7f1c8e2b7b`
+   - URL: `http://localhost:3000/api/scenes/user/{userId}`
+   - 示例: `http://localhost:3000/api/scenes/user/60d2c6b60c5d2c7f1c8e2b7b`
    - 无需 Body
 
 通过这些设置，你可以在 Postman 中测试场景的添加、删除、更新和获取操作，确保后端功能正常工作。

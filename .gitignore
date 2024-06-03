@@ -47,3 +47,14 @@ build/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Build directories
+build/
+dist/
+out/

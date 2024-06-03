@@ -97,3 +97,14 @@ export const deleteUser = async (req: Request, res: Response) => {
         res.status(500).json({ success: false, message: '服务器内部错误' });
     }
 };
+
+// 获取所有用户
+export const getAllUsers = async (req: Request, res: Response) => {
+    try {
+        const users = await User.find();
+        res.status(200).json({ success: true, data: users });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: '服务器内部错误' });
+    }
+};

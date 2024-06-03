@@ -20,9 +20,11 @@ app.use(router)
 app.use(Vant)
 
 const userStore = useUserStore();
-const token = localStorage.getItem('token');
-if (token) {
-  userStore.setToken(token);
+const username = localStorage.getItem('username');
+const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+if (username && isLoggedIn) {
+  userStore.setUsername(username);
 }
 
 app.mount('#app')

@@ -53,7 +53,7 @@ const password = ref('');
 const checked = ref(false);
 const rememberPassword = ref(false);
 const router = useRouter();
-const secretKey = import.meta.env.VITE_APP_SECRET_KEY || 'your-secret-key';
+const secretKey = import.meta.env.VITE_APP_SECRET_KEY;
 
 const userStore = useUserStore();
 

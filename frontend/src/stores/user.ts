@@ -1,3 +1,4 @@
+// src/stores/user.ts
 import { defineStore } from 'pinia';
 import apiClient from '../utils/axios';
 

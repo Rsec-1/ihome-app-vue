@@ -1,4 +1,4 @@
-// 01.Dev\joy-home-backend\frontend\src\utils\axios.ts
+// src/utils/axios.ts
 import axios from 'axios';
 
 const apiClient = axios.create({

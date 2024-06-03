@@ -82,3 +82,18 @@ export const updatePassword = async (req: Request, res: Response) => {
         res.status(500).json({ success: false, message: '服务器内部错误' });
     }
 };
+
+// 删除用户
+export const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findByIdAndDelete(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: '用户未找到' });
+        }
+        res.status(200).json({ success: true, message: '用户删除成功' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: '服务器内部错误' });
+    }
+};

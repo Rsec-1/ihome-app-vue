@@ -44,7 +44,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
   const publicPages = ['/login', '/register', '/not-found'];
-  const authRequired = !publicPages.includes(to.path) && to.name !== 'not-found';
+  const authRequired = !publicPages.includes(to.path);
 
   if (authRequired && !userStore.isAuthenticated) {
     next('/login');

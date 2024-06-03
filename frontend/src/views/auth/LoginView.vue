@@ -1,29 +1,28 @@
 <template>
   <div class="login">
-    <h1 class="text-2xl font-bold text-center my-10">登录</h1>
+    <h1 class="text-2xl font-bold text-center my-10">Login</h1>
     <section>
       <van-form @submit="onSubmit">
         <van-cell-group inset>
-          <van-field v-model="username" name="用户名" label="用户名" placeholder="用户名"
-            @blur="onUsernameBlur"
-            :rules="[{ required: true, message: '请填写用户名' }]" />
-          <van-field v-model="password" type="password" name="密码" label="密码" placeholder="密码"
-            :rules="[{ required: true, message: '请填写密码' }]" />
+          <van-field v-model="username" name="username" label="Username" placeholder="Username" @blur="onUsernameBlur"
+            :rules="[{ required: true, message: 'Please enter username' }]" />
+          <van-field v-model="password" type="password" name="password" label="Password" placeholder="Password"
+            :rules="[{ required: true, message: 'Please enter password' }]" />
         </van-cell-group>
         <div style="margin: 16px;">
           <van-button round block type="primary" native-type="submit" :disabled="!checked">
-            登录
+            Login
           </van-button>
         </div>
         <div class="links">
-          <div @click="toRegister" class="link-left">无账号？点击注册</div>
-          <div @click="forgotPassword" class="link-right">忘记密码？</div>
+          <div @click="toRegister" class="link-left">No account? Register here</div>
+          <div @click="forgotPassword" class="link-right">Forgot password?</div>
         </div>
         <van-field name="remember">
           <template #input>
             <div class="checkbox-label small-font">
               <van-checkbox v-model="rememberPassword" class="small-checkbox"></van-checkbox>
-              <span>记住密码</span>
+              <span>Remember password</span>
             </div>
           </template>
         </van-field>
@@ -31,7 +30,7 @@
           <template #input>
             <div class="checkbox-label small-font">
               <van-checkbox v-model="checked" class="small-checkbox"></van-checkbox>
-              <span>已阅读并同意<a class="font-bold" href="#">《用户协议》</a></span>
+              <span>I have read and agree to the <a class="font-bold" href="#">User Agreement</a></span>
             </div>
           </template>
         </van-field>
@@ -54,8 +53,7 @@ const password = ref('');
 const checked = ref(false);
 const rememberPassword = ref(false);
 const router = useRouter();
-const secretKey = import.meta.env.VITE_APP_SECRET_KEY; // 从环境变量中获取加密密钥
-// console.log("secretKey: ", secretKey);
+const secretKey = import.meta.env.VITE_APP_SECRET_KEY;
 
 const userStore = useUserStore();
 
@@ -70,7 +68,6 @@ onMounted(() => {
 
   const sessionActive = sessionStorage.getItem('sessionActive');
   if (sessionActive) {
-    // console.log('检测到活动会话，自动登录');
     router.push('/home');
   }
 });
@@ -79,7 +76,7 @@ const onUsernameBlur = () => {
   const savedPassword = localStorage.getItem(username.value);
   if (savedPassword) {
     password.value = CryptoJS.AES.decrypt(savedPassword, secretKey).toString(CryptoJS.enc.Utf8);
-    rememberPassword.value = true; // 自动填充密码时勾选 "记住密码"
+    rememberPassword.value = true; // Automatically check "Remember password" when password is autofilled
   } else {
     password.value = '';
   }
@@ -87,14 +84,11 @@ const onUsernameBlur = () => {
 
 const onSubmit = async () => {
   try {
-    // console.log('提交的表单值:', { username: username.value, password: password.value, rememberPassword: rememberPassword.value });
     const response = await apiClient.post('/api/users/login', {
       username: username.value,
       password: password.value,
     });
-    // console.log('登录成功', response.data);
-
-    userStore.setToken(response.data.token);
+    userStore.setUsername(username.value);
 
     if (rememberPassword.value) {
       const encryptedPassword = CryptoJS.AES.encrypt(password.value, secretKey).toString();
@@ -105,18 +99,17 @@ const onSubmit = async () => {
 
     sessionStorage.setItem('sessionActive', 'true');
 
-    showSuccessToast('登录成功');
+    showSuccessToast('Login successful');
     setTimeout(() => {
-      // router.push('/home');
-      location.reload(); // 自动刷新页面
+      router.push('/home');
     }, 1000);
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error('登录失败', error.response?.data);
-      showFailToast(`登录失败: ${error.response?.data?.message || '未知错误'}`);
+      console.error('Login failed', error.response?.data);
+      showFailToast(`Login failed: ${error.response?.data?.message || 'Unknown error'}`);
     } else {
-      console.error('发生意外错误', error);
-      showFailToast('发生意外错误');
+      console.error('Unexpected error occurred', error);
+      showFailToast('Unexpected error occurred');
     }
   }
 };

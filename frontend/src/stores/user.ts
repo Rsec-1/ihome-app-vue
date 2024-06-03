@@ -1,48 +1,26 @@
 // src/stores/user.ts
 import { defineStore } from 'pinia';
-import apiClient from '../utils/axios';
-
-interface UserState {
-  token: string | null;
-  userInfo: {
-    username: string;
-    email?: string;
-    nickname?: string;
-  } | null;
-}
 
 export const useUserStore = defineStore('user', {
-  state: (): UserState => ({
-    token: localStorage.getItem('token'),
-    userInfo: null
+  state: () => ({
+    username: localStorage.getItem('username') || '',
+    isLoggedIn: !!localStorage.getItem('isLoggedIn'),
   }),
-  actions: {
-    setToken(token: string) {
-      this.token = token;
-      localStorage.setItem('token', token);
-    },
-    clearToken() {
-      this.token = null;
-      localStorage.removeItem('token');
-    },
-    async login(username: string, password: string) {
-      const response = await apiClient.post('/api/users/login', { username, password });
-      this.setToken(response.data.token);
-      this.userInfo = response.data.user;
-    },
-    async register(username: string, password: string, email?: string, nickname?: string) {
-      const response = await apiClient.post('/api/users/register', { username, password, email, nickname });
-      this.setToken(response.data.token);
-      this.userInfo = response.data.user;
-    },
-    logout() {
-      this.clearToken();
-      this.userInfo = null;
-    }
-  },
   getters: {
-    isAuthenticated(state): boolean {
-      return !!state.token;
-    }
-  }
+    isAuthenticated: (state) => state.isLoggedIn,
+  },
+  actions: {
+    setUsername(username: string) {
+      this.username = username;
+      localStorage.setItem('username', username);
+      this.isLoggedIn = true;
+      localStorage.setItem('isLoggedIn', 'true');
+    },
+    clearUsername() {
+      this.username = '';
+      localStorage.removeItem('username');
+      localStorage.removeItem('isLoggedIn');
+      this.isLoggedIn = false;
+    },
+  },
 });

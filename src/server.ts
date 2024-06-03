@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import userRoutes from './routes/users';
+import houseRoutes from './routes/houses'; // 导入房子路由
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(cors()); // 确保 CORS 正确配置
 app.use(bodyParser.json());
 
 app.use('/api/users', userRoutes);
+app.use('/api/houses', houseRoutes);
 
 const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/your-database-name';
 mongoose.connect(uri)

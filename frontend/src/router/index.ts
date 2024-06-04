@@ -1,10 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/home/HomeView.vue';
-import LoginView from '../views/auth/LoginView.vue';
-import RegisterView from '../views/auth/RegisterView.vue';
-import AboutView from '../views/about/AboutView.vue';
-import NotFoundView from '../views/error/NotFoundView.vue';
-import { useUserStore } from '../stores/user';
+import { useUserStore } from '@/stores/user';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,27 +11,28 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: HomeView
+      // component: HomeView,
+      component: () => import('@/views/home/HomeView.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginView
+      component: () => import('@/views/auth/login/LoginView.vue')
     },
     {
       path: '/register',
       name: 'register',
-      component: RegisterView
+      component: () => import('@/views/auth/register/RegisterView.vue')
     },
     {
       path: '/about',
       name: 'about',
-      component: AboutView
+      component: () => import('@/views/about/AboutView.vue')
     },
     {
       path: '/:pathMatch(.*)*', // 匹配所有未定义的路径
       name: 'not-found',
-      component: NotFoundView
+      component: () => import('@/views/error/NotFoundView.vue')
     }
   ]
 });

@@ -40,11 +40,11 @@ const router = createRouter({
       name: 'register',
       component: () => import('@/views/auth/register/RegisterView.vue')
     },
-    // {
-    //   path: '/forgot',
-    //   name: 'forgot',
-    //   component: () => import('@/views/auth/forgot/ForgotView.vue')
-    // },
+    {
+      path: '/forgot',
+      name: 'forgot',
+      component: () => import('@/views/auth/forgot/ForgotView.vue')
+    },
     {
       path: '/:pathMatch(.*)*', // 匹配所有未定义的路径
       name: 'not-found',

@@ -15,6 +15,7 @@ const userSchema = new Schema({
     default: () => `User${Math.floor(Math.random() * 10000)}`,
   },
   houses: [{ type: mongoose.Schema.Types.ObjectId, ref: "House" }],
+  role: { type: String, enum: ["user", "admin"], default: "user" },
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -1,13 +1,13 @@
-var mongoose = require('mongoose');
-require('dotenv').config(); // 加载环境变量
+var mongoose = require("mongoose");
+require("dotenv").config(); // Load environment variables
 
 var connectDB = async () => {
   try {
     var mongoURI = process.env.MONGODB_URI;
     await mongoose.connect(mongoURI);
-    console.log('MongoDB 连接成功');
+    console.log("MongoDB connected successfully");
   } catch (err) {
-    console.error('MongoDB 连接失败', err);
+    console.error("MongoDB connection failed", err);
     process.exit(1);
   }
 };

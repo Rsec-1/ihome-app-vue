@@ -7,14 +7,16 @@ const {
   deleteUser,
   getAllUsers,
 } = require("../controllers/userController");
+const { requireSignin, isAuth, isAdmin } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post("/register", registerUser); // 注册用户路由
-router.post("/login", loginUser); // 登录用户路由
-router.put("/update", updateUser); // 更新用户信息路由
-router.put("/updatePassword", updatePassword); // 更新用户密码路由
-router.delete("/delete/:userId", deleteUser); // 删除用户路由
-router.get("/all", getAllUsers); // 获取所有用户
+router.post("/register", registerUser); // Register user route
+router.post("/login", loginUser); // Login user route
+
+router.put("/update", requireSignin, isAuth, updateUser); // Update user info route
+router.put("/updatePassword", requireSignin, isAuth, updatePassword); // Update user password route
+router.delete("/delete/:userId", requireSignin, isAuth, deleteUser); // Delete user route
+router.get("/all", requireSignin, isAdmin, getAllUsers); // Get all users
 
 module.exports = router;

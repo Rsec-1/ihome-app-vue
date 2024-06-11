@@ -1,39 +1,49 @@
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
-const generateRandomNickname = () => {
-  return "user_" + Math.random().toString(36).substring(2, 15);
+const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user._id,
+      username: user.username,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
 };
 
 exports.registerUser = async (req, res) => {
   try {
-    const { username, password, email, nickname } = req.body;
+    const { username, password, email, nickname, role } = req.body;
 
-    // 检查用户名是否已经存在
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ success: false, message: "用户名已存在" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Username already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const generatedNickname = nickname || generateRandomNickname();
     const user = new User({
       username,
       password: hashedPassword,
       email,
-      nickname: generatedNickname,
+      nickname: nickname || `User${Math.floor(Math.random() * 10000)}`,
+      role,
     });
     await user.save();
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "用户注册成功",
-        data: { userId: user._id },
-      });
+    const token = generateToken(user);
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      token,
+      data: { userId: user._id },
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "服务器内部错误" });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -42,16 +52,23 @@ exports.loginUser = async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ success: false, message: "凭证无效" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ success: false, message: "凭证无效" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid credentials" });
     }
-    res.status(200).json({ success: true, message: "用户登录成功" });
+    const token = generateToken(user);
+    res
+      .status(200)
+      .json({ success: true, message: "User logged in successfully", token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "服务器内部错误" });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -65,14 +82,20 @@ exports.updateUser = async (req, res) => {
       new: true,
     });
     if (!user) {
-      return res.status(404).json({ success: false, message: "用户未找到" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     res
       .status(200)
-      .json({ success: true, message: "用户信息更新成功", data: user });
+      .json({
+        success: true,
+        message: "User information updated successfully",
+        data: user,
+      });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "服务器内部错误" });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -81,43 +104,51 @@ exports.updatePassword = async (req, res) => {
     const { userId, oldPassword, newPassword } = req.body;
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "用户未找到" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     const isMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isMatch) {
-      return res.status(400).json({ success: false, message: "旧密码不正确" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Old password is incorrect" });
     }
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
-    res.status(200).json({ success: true, message: "密码更新成功" });
+    res
+      .status(200)
+      .json({ success: true, message: "Password updated successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "服务器内部错误" });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
-// 删除用户
 exports.deleteUser = async (req, res) => {
   try {
     const { userId } = req.params;
     const user = await User.findByIdAndDelete(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "用户未找到" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
-    res.status(200).json({ success: true, message: "用户删除成功" });
+    res
+      .status(200)
+      .json({ success: true, message: "User deleted successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: "服务器内部错误" });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
-// 获取所有用户
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
     res.status(200).json({ success: true, data: users });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "服务器内部错误" });
+    console.error("Error fetching all users:", error); // Log error output
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

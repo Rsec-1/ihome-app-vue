@@ -1,30 +1,29 @@
-// frontend/src/main.ts
-import './assets/main.css'
+import "./assets/main.css";
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
-import App from './App.vue'
-import router from './router'
+import App from "./App.vue";
+import router from "./router";
 
-import Vant from 'vant';
-import 'vant/lib/index.css';
+import Vant from "vant";
+import "vant/lib/index.css";
 
-import { useUserStore } from './stores/user';
+import { useUserStore } from "./stores/user";
 
-const app = createApp(App)
-const pinia = createPinia()
+const app = createApp(App);
+const pinia = createPinia();
 
-app.use(pinia)
-app.use(router)
-app.use(Vant)
+app.use(pinia);
+app.use(router);
+app.use(Vant);
 
 const userStore = useUserStore();
-const username = localStorage.getItem('username');
-const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+const token = localStorage.getItem("token");
+const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
-if (username && isLoggedIn) {
-  userStore.setUsername(username);
+if (token && isLoggedIn) {
+  userStore.setToken(token);
 }
 
-app.mount('#app')
+app.mount("#app");

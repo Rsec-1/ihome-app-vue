@@ -5,18 +5,23 @@ import { showSuccessToast, showFailToast } from 'vant';
 import apiClient from '@/utils/axios';
 import axios from 'axios';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdilAccount, mdilLock } from '@mdi/light-js';
+import { mdilAccount, mdilLock, mdilEmail } from '@mdi/light-js';
 
 const username = ref('');
+const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const checked = ref(false);
 const router = useRouter();
 
+const validateEmail = (value: string) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(value) ? true : 'Please enter a valid email address';
+};
+
 const validateConfirmPassword = (value: string) => {
     return value === password.value ? true : 'Passwords do not match';
 };
-
 
 const onSubmit = async () => {
     if (password.value !== confirmPassword.value) {
@@ -28,6 +33,8 @@ const onSubmit = async () => {
         const response = await apiClient.post('/api/users/register', {
             username: username.value,
             password: password.value,
+            email: email.value,
+            role: 'user'
         });
 
         showSuccessToast('Registration successful');
@@ -60,6 +67,15 @@ const toLogin = () => {
                 </template>
             </van-field>
 
+            <van-field v-model="email" name="email" placeholder="Email" :rules="[
+                { required: true, message: 'Please enter email' },
+                { validator: validateEmail, message: 'Please enter a valid email address' }
+            ]" class="input-field">
+                <template #left-icon>
+                    <svg-icon type="mdi" :path="mdilEmail"></svg-icon>
+                </template>
+            </van-field>
+
             <van-field v-model="password" type="password" name="password" placeholder="Password"
                 :rules="[{ required: true, message: 'Please enter password' }]" class="input-field">
                 <template #left-icon>
@@ -68,7 +84,10 @@ const toLogin = () => {
             </van-field>
 
             <van-field v-model="confirmPassword" type="password" name="confirmPassword" placeholder="Confirm Password"
-                :rules="[{ required: true, message: 'Please confirm your password' }, { validator: validateConfirmPassword }]" class="input-field">
+                :rules="[
+                    { required: true, message: 'Please confirm your password' },
+                    { validator: validateConfirmPassword }
+                ]" class="input-field">
                 <template #left-icon>
                     <svg-icon type="mdi" :path="mdilLock"></svg-icon>
                 </template>
@@ -80,15 +99,16 @@ const toLogin = () => {
                         <div class="checkbox-wrapper">
                             <van-checkbox v-model="checked"></van-checkbox>
                         </div>
-                        <span class="agreement-text">I have read and agree to the <a href="#" class="detail-agreement">User Agreement</a></span>
+                        <span class="agreement-text">I have read and agree to the <a href="#"
+                                class="detail-agreement">User Agreement</a></span>
                     </div>
                 </template>
             </van-field>
-            
+
             <van-button round block type="primary" native-type="submit" :disabled="!checked" class="register-button">
                 Sign up
             </van-button>
-            
+
             <div class="login-link" @click="toLogin">
                 Already have an account? Click to login
             </div>

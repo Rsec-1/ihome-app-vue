@@ -1,48 +1,51 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { showSuccessToast, showLoadingToast, showFailToast } from 'vant';
+import { showSuccessToast, showFailToast, showLoadingToast } from 'vant';
 import apiClient from '@/utils/axios';
+import { useRouter } from 'vue-router';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdilAccount, mdilEmail, mdilLock } from '@mdi/light-js';
+import { mdilAccount, mdilLock, mdilTooltipText } from '@mdi/light-js';
+import axios from 'axios';
 
+const step = ref(1); // 当前步骤
 const usernameOrEmail = ref('');
-const verificationCode = ref('');
+const resetToken = ref('');
 const newPassword = ref('');
-const confirmPassword = ref('');
-const step = ref(1);
 const router = useRouter();
 
-const onSendVerificationCode = async () => {
+const sendResetCode = async () => {
     try {
-        showLoadingToast('Sending verification code...');
-        await apiClient.post('/api/users/send-verification-code', {
+        showLoadingToast('Sending reset code...');
+        const response = await apiClient.post('/api/users/forgot-password', {
             usernameOrEmail: usernameOrEmail.value,
         });
-        showSuccessToast('Verification code sent');
-        step.value = 2;
+        showSuccessToast(response.data.message);
+        step.value = 2; // 切换到第二步
     } catch (error) {
-        showFailToast('Failed to send verification code');
+        if (axios.isAxiosError(error) && error.response && error.response.data && error.response.data.message) {
+            showFailToast(`Failed to send reset code: ${error.response.data.message}`);
+        } else {
+            showFailToast('Failed to send reset code');
+        }
     }
 };
 
-const onResetPassword = async () => {
-    if (newPassword.value !== confirmPassword.value) {
-        showFailToast('Passwords do not match');
-        return;
-    }
-
+const resetPassword = async () => {
     try {
         showLoadingToast('Resetting password...');
-        await apiClient.post('/api/users/reset-password', {
+        const response = await apiClient.post('/api/users/reset-password', {
             usernameOrEmail: usernameOrEmail.value,
-            verificationCode: verificationCode.value,
+            resetToken: resetToken.value,
             newPassword: newPassword.value,
         });
-        showSuccessToast('Password reset successful');
+        showSuccessToast(response.data.message);
         router.push('/login');
     } catch (error) {
-        showFailToast('Failed to reset password');
+        if (axios.isAxiosError(error) && error.response && error.response.data && error.response.data.message) {
+            showFailToast(`Failed to reset password: ${error.response.data.message}`);
+        } else {
+            showFailToast('Failed to reset password');
+        }
     }
 };
 
@@ -52,66 +55,55 @@ const toLogin = () => {
 </script>
 
 <template>
-    <div class="reset-password-container">
-        <van-form ref="formRef" @submit.prevent="step === 1 ? onSendVerificationCode : onResetPassword">
-            <van-field v-if="step === 1" v-model="usernameOrEmail" name="usernameOrEmail"
-                placeholder="Username or Email" :rules="[{ required: true, message: 'Please enter username or email' }]"
-                class="input-field">
+    <div class="forgot-reset-password-container">
+        <van-form v-if="step === 1" @submit="sendResetCode">
+            <van-field v-model="usernameOrEmail" name="usernameOrEmail" placeholder="Username or Email"
+                :rules="[{ required: true, message: 'Please enter your username or email' }]">
                 <template #left-icon>
                     <svg-icon type="mdi" :path="mdilAccount"></svg-icon>
                 </template>
             </van-field>
-
-            <van-field v-if="step === 2" v-model="verificationCode" name="verificationCode"
-                placeholder="Verification Code" :rules="[{ required: true, message: 'Please enter verification code' }]"
-                class="input-field">
-                <template #left-icon>
-                    <svg-icon type="mdi" :path="mdilEmail"></svg-icon>
-                </template>
-            </van-field>
-
-            <van-field v-if="step === 2" v-model="newPassword" type="password" name="newPassword"
-                placeholder="New Password" :rules="[{ required: true, message: 'Please enter new password' }]"
-                class="input-field">
-                <template #left-icon>
-                    <svg-icon type="mdi" :path="mdilLock"></svg-icon>
-                </template>
-            </van-field>
-
-            <van-field v-if="step === 2" v-model="confirmPassword" type="password" name="confirmPassword"
-                placeholder="Confirm Password" :rules="[{ required: true, message: 'Please confirm your password' }]"
-                class="input-field">
-                <template #left-icon>
-                    <svg-icon type="mdi" :path="mdilLock"></svg-icon>
-                </template>
-            </van-field>
-
-            <van-button round block type="primary" native-type="submit" class="action-button">
-                {{ step === 1 ? 'Send Verification Code' : 'Reset Password' }}
+            <van-button round block type="primary" native-type="submit">
+                Send Reset Code
             </van-button>
-            <div class="login-link" @click="toLogin">
-                Remembered password? Go to login
-            </div>
         </van-form>
+        <van-form v-else @submit="resetPassword">
+            <van-field v-model="usernameOrEmail" name="usernameOrEmail" placeholder="Username or Email"
+                :rules="[{ required: true, message: 'Please enter your username or email' }]" disabled>
+                <template #left-icon>
+                    <svg-icon type="mdi" :path="mdilAccount"></svg-icon>
+                </template>
+            </van-field>
+            <van-field v-model="resetToken" name="resetToken" placeholder="Reset Code"
+                :rules="[{ required: true, message: 'Please enter the reset code' }]">
+                <template #left-icon>
+                    <svg-icon type="mdi" :path="mdilTooltipText"></svg-icon>
+                </template>
+            </van-field>
+            <van-field v-model="newPassword" type="password" name="newPassword" placeholder="New Password"
+                :rules="[{ required: true, message: 'Please enter your new password' }]">
+                <template #left-icon>
+                    <svg-icon type="mdi" :path="mdilLock"></svg-icon>
+                </template>
+            </van-field>
+            <van-button round block type="primary" native-type="submit">
+                Reset Password
+            </van-button>
+        </van-form>
+
+        <div class="login-link" @click="toLogin">
+            Remembered password? Go to login
+        </div>
     </div>
 </template>
 
-<style scoped lang="less">
-.reset-password-container {
-    width: 100%;
+<style scoped>
+.forgot-reset-password-container {
     max-width: 400px;
     margin: 0 auto;
     padding: 20px;
     background: #fff;
     border-radius: 10px;
-}
-
-.input-field {
-    margin-bottom: 15px;
-}
-
-.action-button {
-    margin-top: 20px;
 }
 
 .login-link {

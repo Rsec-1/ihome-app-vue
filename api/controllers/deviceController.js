@@ -12,6 +12,7 @@ exports.addDevice = async (req, res) => {
       name,
       type,
       brand,
+      status,
       icon,
       location,
       userId,

@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const { expressjwt: expressJwt } = require("express-jwt");
 
 exports.requireSignin = expressJwt({
@@ -27,7 +26,6 @@ exports.isAuth = (req, res, next) => {
 };
 
 exports.isAdmin = (req, res, next) => {
-  // console.log("req.auth:", req.auth); // Debug output
   if (req.auth.role !== "admin") {
     return res.status(403).json({
       error: "Admin resource! Access denied",

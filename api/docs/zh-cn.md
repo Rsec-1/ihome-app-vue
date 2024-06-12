@@ -172,6 +172,29 @@
      }
      ```
 
+9. **获取当前用户详细信息**
+
+   - **URL**: `/api/users/me`
+   - **Method**: `GET`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "data": {
+         "_id": "6668f76e39652103b1672bee",
+         "username": "username",
+         "email": "user@mail.com",
+         "nickname": "nickname",
+         "houses": [],
+         "role": "user",
+         "createdAt": "2024-06-12T01:18:38.405Z",
+         "__v": 0
+       }
+     }
+     ```
+
 ### 房子模型
 
 1. **获取用户所有房子**

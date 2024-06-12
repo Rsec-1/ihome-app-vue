@@ -54,6 +54,18 @@ const onSubmit = async () => {
         userStore.setUsername(username.value);
         userStore.setToken(response.data.token);
 
+        // 获取用户详细信息
+        const userDetailsResponse = await apiClient.get('/api/users/me');
+        const userData = userDetailsResponse.data.data;
+        userStore.setUserDetails({
+            userId: userData._id,
+            email: userData.email,
+            nickname: userData.nickname,
+            role: userData.role,
+            createdAt: userData.createdAt,
+            houses: userData.houses,
+        });
+
         if (rememberPassword.value) {
             const encryptedPassword = CryptoJS.AES.encrypt(password.value, secretKey).toString();
             localStorage.setItem(username.value, encryptedPassword);
@@ -65,7 +77,7 @@ const onSubmit = async () => {
 
         showSuccessToast('Login successful');
         setTimeout(() => {
-            router.push('/home');
+            router.push('/profile');
         }, 1000);
     } catch (error) {
         if (axios.isAxiosError(error)) {

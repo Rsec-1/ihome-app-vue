@@ -6,7 +6,16 @@ const Room = require("../models/room");
 exports.addDevice = async (req, res) => {
   try {
     const { roomId, name, type, brand, icon, location } = req.body;
-    const device = new Device({ roomId, name, type, brand, icon, location });
+    const userId = req.auth.id; // 从JWT中获取用户ID
+    const device = new Device({
+      roomId,
+      name,
+      type,
+      brand,
+      icon,
+      location,
+      userId,
+    });
     await device.save();
 
     const room = await Room.findById(roomId);

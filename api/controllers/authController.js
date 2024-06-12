@@ -35,14 +35,12 @@ exports.registerUser = async (req, res) => {
     });
     await user.save();
     const token = generateToken(user);
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "User registered successfully",
-        token,
-        data: { userId: user._id },
-      });
+    res.status(201).json({
+      success: true,
+      message: "User registered successfully",
+      token,
+      data: { userId: user._id },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Internal server error" });

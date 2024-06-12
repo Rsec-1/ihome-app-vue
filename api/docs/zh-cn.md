@@ -364,15 +364,12 @@
            "deviceId": "device_id",
            "name": "device_name",
            "type": "device_type",
-           "brand
+           "brand": "device_brand",
+           "status": "online" // or "offline"
+         }
+       ]
+     }
      ```
-
-": "device_brand",
-"status": "online" // or "offline"
-}
-]
-}
-```
 
 2. **添加设备**
 

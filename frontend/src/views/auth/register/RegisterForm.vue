@@ -5,7 +5,7 @@ import { showSuccessToast, showFailToast } from 'vant';
 import apiClient from '@/utils/axios';
 import axios from 'axios';
 import SvgIcon from '@jamescoyle/vue-icon';
-import { mdilAccount, mdilLock } from '@mdi/light-js';
+import { mdilAccount, mdilLock, mdilEmail } from '@mdi/light-js';
 
 const username = ref('');
 const email = ref('');
@@ -72,7 +72,7 @@ const toLogin = () => {
                 { validator: validateEmail, message: 'Please enter a valid email address' }
             ]" class="input-field">
                 <template #left-icon>
-                    <svg-icon type="mdi" :path="mdilAccount"></svg-icon>
+                    <svg-icon type="mdi" :path="mdilEmail"></svg-icon>
                 </template>
             </van-field>
 

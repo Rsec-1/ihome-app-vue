@@ -1,270 +1,654 @@
+## iHome API 文档
 
-## Home System API 文档
-
-为了在 Postman 中测试后端相关相关的操作，您需要配置以下请求：
+为了在 Postman/Hoppscotch 中测试 iHome 后端相关的操作，您需要配置以下请求：
 
 ### 用户模型
 
 1. **用户注册**
-   - 方法：POST
-   - URL: `http://localhost:3000/api/users/register`
-   - Body (JSON):
+
+   - **URL**: `/api/users/register`
+   - **Method**: `POST`
+   - **Request Body**:
      ```json
      {
-       "username": "exampleUser",
-       "password": "examplePassword",
-       "email": "example@example.com",
-       "nickname": "exampleNickname"
+       "username": "your_username",
+       "password": "your_password",
+       "email": "your_email@example.com",
+       "nickname": "your_nickname",
+       "role": "user" // or "admin"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "User registered successfully",
+       "token": "your_jwt_token",
+       "data": {
+         "userId": "user_id"
+       }
      }
      ```
 
 2. **用户登录**
-   - 方法：POST
-   - URL: `http://localhost:3000/api/users/login`
-   - Body (JSON):
+
+   - **URL**: `/api/users/login`
+   - **Method**: `POST`
+   - **Request Body**:
      ```json
      {
-       "username": "exampleUser",
-       "password": "examplePassword"
+       "username": "your_username",
+       "password": "your_password"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "User logged in successfully",
+       "token": "your_jwt_token"
      }
      ```
 
 3. **更新用户信息**
-   - 方法：PUT
-   - URL: `http://localhost:3000/api/users/update`
-   - Body (JSON):
+
+   - **URL**: `/api/users/update`
+   - **Method**: `PUT`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
      ```json
      {
-       "userId": "用户的ObjectId",
-       "email": "newEmail@example.com",
-       "nickname": "newNickname"
+       "userId": "user_id",
+       "email": "new_email@example.com",
+       "nickname": "new_nickname"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "User information updated successfully",
+       "data": {
+         "userId": "user_id",
+         "email": "new_email@example.com",
+         "nickname": "new_nickname"
+       }
      }
      ```
 
 4. **更新用户密码**
-   - 方法：PUT
-   - URL: `http://localhost:3000/api/users/updatePassword`
-   - Body (JSON):
+
+   - **URL**: `/api/users/updatePassword`
+   - **Method**: `PUT`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
      ```json
      {
-       "userId": "用户的ObjectId",
-       "oldPassword": "exampleOldPassword",
-       "newPassword": "exampleNewPassword"
+       "userId": "user_id",
+       "oldPassword": "old_password",
+       "newPassword": "new_password"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Password updated successfully"
      }
      ```
 
-4. **删除用户**
-   - 方法：DELETE
-   - URL: `http://localhost:3000/api/users/delete/{userId}`
-   - 示例: `http://localhost:3000/api/users/delete/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+5. **删除用户**
 
-5. **获取所有用户**
-   - 方法：GET
-   - URL: `http://localhost:3000/api/users/all`
-   - 示例: `http://localhost:3000/api/users/all`
-   - 无需 Body
+   - **URL**: `/api/users/delete/:userId`
+   - **Method**: `DELETE`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "User deleted successfully"
+     }
+     ```
 
-通过这些步骤，你可以在 Postman 中测试删除用户的功能。
+6. **获取所有用户**
+
+   - **URL**: `/api/users/all`
+   - **Method**: `GET`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "data": [
+         {
+           "userId": "user_id",
+           "username": "username",
+           "email": "email@example.com",
+           "nickname": "nickname"
+         }
+       ]
+     }
+     ```
+
+7. **忘记密码**
+
+   - **URL**: `/api/users/forgot-password`
+   - **Method**: `POST`
+   - **Request Body**:
+     ```json
+     {
+       "usernameOrEmail": "your_username_or_email"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Password reset code sent to email"
+     }
+     ```
+
+8. **重置密码**
+
+   - **URL**: `/api/users/reset-password`
+   - **Method**: `POST`
+   - **Request Body**:
+     ```json
+     {
+       "usernameOrEmail": "your_username_or_email",
+       "resetToken": "reset_token",
+       "newPassword": "new_password"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Password reset successfully"
+     }
+     ```
 
 ### 房子模型
 
 1. **获取用户所有房子**
-   - 方法：GET
-   - URL: `http://localhost:3000/api/houses/user/{userId}`
-   - 示例: `http://localhost:3000/api/houses/user/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
 
-2. **添加房子**
-   - 方法：POST
-   - URL: `http://localhost:3000/api/houses/add`
-   - Body (JSON):
+   - **URL**: `/api/houses/user/:userId`
+   - **Method**: `GET`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
      ```json
      {
-       "userId": "用户的ObjectId",
-       "name": "房子的名称",
-       "address": "房子的地址"
+       "success": true,
+       "houses": [
+         {
+           "houseId": "house_id",
+           "name": "house_name",
+           "address": "house_address"
+         }
+       ]
      }
      ```
 
-3. **删除房子**
-   - 方法：DELETE
-   - URL: `http://localhost:3000/api/houses/delete/{houseId}`
-   - 示例: `http://localhost:3000/api/houses/delete/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+2. **添加房子**
 
-4. **更新房子**
-   - 方法：PUT
-   - URL: `http://localhost:3000/api/houses/update`
-   - Body (JSON):
+   - **URL**: `/api/houses/add`
+   - **Method**: `POST`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
      ```json
      {
-       "houseId": "房子的ObjectId",
-       "name": "新的房子名称",
-       "address": "新的房子地址"
+       "userId": "user_id",
+       "name": "house_name",
+       "address": "house_address"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "House added successfully",
+       "house": {
+         "houseId": "house_id",
+         "name": "house_name",
+         "address": "house_address"
+       }
+     }
+     ```
+
+3. **更新房子**
+
+   - **URL**: `/api/houses/update`
+   - **Method**: `PUT`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
+     ```json
+     {
+       "houseId": "house_id",
+       "name": "new_house_name",
+       "address": "new_house_address"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "House updated successfully",
+       "house": {
+         "houseId": "house_id",
+         "name": "new_house_name",
+         "address": "new_house_address"
+       }
+     }
+     ```
+
+4. **删除房子**
+
+   - **URL**: `/api/houses/delete/:houseId`
+   - **Method**: `DELETE`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "House deleted successfully"
      }
      ```
 
 ### 房间模型
 
-1. **添加房间**
-   - 方法：POST
-   - URL: `http://localhost:3000/api/rooms/add`
-   - Body (JSON):
+1. **获取房子的所有房间**
+
+   - **URL**: `/api/rooms/house/:houseId`
+   - **Method**: `GET`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
      ```json
      {
-       "houseId": "房子的ObjectId",
-       "name": "房间的名称"
+       "success": true,
+       "rooms": [
+         {
+           "roomId": "room_id",
+           "name": "room_name"
+         }
+       ]
      }
      ```
 
-2. **删除房间**
-   - 方法：DELETE
-   - URL: `http://localhost:3000/api/rooms/delete/{roomId}`
-   - 示例: `http://localhost:3000/api/rooms/delete/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+2. **添加房间**
+
+   - **URL**: `/api/rooms/add`
+   - **Method**: `POST`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
+     ```json
+     {
+       "houseId": "house_id",
+       "name": "room_name"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Room added successfully",
+       "room": {
+         "roomId": "room_id",
+         "name": "room_name"
+       }
+     }
+     ```
 
 3. **更新房间**
-   - 方法：PUT
-   - URL: `http://localhost:3000/api/rooms/update`
-   - Body (JSON):
+
+   - **URL**: `/api/rooms/update`
+   - **Method**: `PUT`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
      ```json
      {
-       "roomId": "房间的ObjectId",
-       "name": "新的房间名称"
+       "roomId": "room_id",
+       "name": "new_room_name"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Room updated successfully",
+       "room": {
+         "roomId": "room_id",
+         "name": "new_room_name"
+       }
      }
      ```
 
-4. **获取房子的所有房间**
-   - 方法：GET
-   - URL: `http://localhost:3000/api/rooms/house/{houseId}`
-   - 示例: `http://localhost:3000/api/rooms/house/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+4. **删除房间**
+
+   - **URL**: `/api/rooms/delete/:roomId`
+   - **Method**: `DELETE`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Room deleted successfully"
+     }
+     ```
 
 ### 设备模型
 
-1. **添加设备**
-   - 方法：POST
-   - URL: `http://localhost:3000/api/devices/add`
-   - Body (JSON):
+1. **获取房间所有设备**
+
+   - **URL**: `/api/devices/room/:roomId`
+   - **Method**: `GET`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
      ```json
      {
-       "roomId": "房间的ObjectId",
-       "name": "设备名称",
-       "type": "设备类型",
-       "brand": "设备品牌",
-       "icon": "设备图标URL",
-       "location": "设备所在位置"
-     }
+       "success": true,
+       "devices": [
+         {
+           "deviceId": "device_id",
+           "name": "device_name",
+           "type": "device_type",
+           "brand
      ```
 
-2. **删除设备**
-   - 方法：DELETE
-   - URL: `http://localhost:3000/api/devices/delete/{deviceId}`
-   - 示例: `http://localhost:3000/api/devices/delete/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+": "device_brand",
+"status": "online" // or "offline"
+}
+]
+}
+```
+
+2. **添加设备**
+
+   - **URL**: `/api/devices/add`
+   - **Method**: `POST`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
+     ```json
+     {
+       "roomId": "room_id",
+       "name": "device_name",
+       "type": "device_type",
+       "brand": "device_brand",
+       "status": "online" // or "offline",
+       "location": "device_location"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Device added successfully",
+       "device": {
+         "deviceId": "device_id",
+         "name": "device_name",
+         "type": "device_type",
+         "brand": "device_brand",
+         "status": "online" // or "offline",
+         "location": "device_location"
+       }
+     }
+     ```
 
 3. **更新设备**
-   - 方法：PUT
-   - URL: `http://localhost:3000/api/devices/update`
-   - Body (JSON):
+
+   - **URL**: `/api/devices/update`
+   - **Method**: `PUT`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
      ```json
      {
-       "deviceId": "设备的ObjectId",
-       "name": "新的设备名称",
-       "type": "新的设备类型",
-       "brand": "新的设备品牌",
-       "icon": "新的设备图标URL",
-       "status": "online 或 offline",
-       "location": "新的设备所在位置"
+       "deviceId": "device_id",
+       "name": "new_device_name",
+       "type": "new_device_type",
+       "brand": "new_device_brand",
+       "status": "online" // or "offline",
+       "location": "new_device_location"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Device updated successfully",
+       "device": {
+         "deviceId": "device_id",
+         "name": "new_device_name",
+         "type": "new_device_type",
+         "brand": "new_device_brand",
+         "status": "online" // or "offline",
+         "location": "new_device_location"
+       }
      }
      ```
 
-4. **获取房间所有设备**
-   - 方法：GET
-   - URL: `http://localhost:3000/api/devices/room/{roomId}`
-   - 示例: `http://localhost:3000/api/devices/room/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+4. **删除设备**
+
+   - **URL**: `/api/devices/delete/:deviceId`
+   - **Method**: `DELETE`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Device deleted successfully"
+     }
+     ```
 
 5. **获取设备详情**
-   - 方法：GET
-   - URL: `http://localhost:3000/api/devices/details/{deviceId}`
-   - 示例: `http://localhost:3000/api/devices/details/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+
+   - **URL**: `/api/devices/details/:deviceId`
+   - **Method**: `GET`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "device": {
+         "deviceId": "device_id",
+         "name": "device_name",
+         "type": "device_type",
+         "brand": "device_brand",
+         "status": "online" // or "offline",
+         "location": "device_location"
+       }
+     }
+     ```
 
 6. **远程控制设备**
-   - 方法：POST
-   - URL: `http://localhost:3000/api/devices/control`
-   - Body (JSON):
+
+   - **URL**: `/api/devices/control`
+   - **Method**: `POST`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
      ```json
      {
-       "deviceId": "设备的ObjectId",
-       "action": "turn_on 或 turn_off"
+       "deviceId": "device_id",
+       "action": "turn_on" // or "turn_off"
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Device controlled successfully",
+       "device": {
+         "deviceId": "device_id",
+         "name": "device_name",
+         "status": "online" // or "offline"
+       }
      }
      ```
 
-#### 场景模型 (`scene.ts`)
+### 场景模型
 
-要实现自动化场景设置功能，后端需要进行一些扩展。自动化场景通常包括触发条件（如传感器输入、时间、状态变化等）和执行动作（如打开灯、调节温度等）。
+1. **获取用户所有场景**
 
-1. **添加场景**
-   - 方法：POST
-   - URL: `http://localhost:3000/api/scenes/add`
-   - Body (JSON):
+   - **URL**: `/api/scenes/user/:userId`
+   - **Method**: `GET`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
      ```json
      {
-       "userId": "用户的ObjectId",
-       "name": "场景名称",
-       "conditions": [
+       "success": true,
+       "scenes": [
          {
-           "type": "time",
-           "params": { "hour": 6, "minute": 0 }
-         }
-       ],
-       "actions": [
-         {
-           "deviceId": "设备的ObjectId",
-           "command": "turn_on",
-           "params": {}
+           "sceneId": "scene_id",
+           "name": "scene_name",
+           "conditions": [
+             {
+               "type": "condition_type",
+               "params": "condition_params"
+             }
+           ],
+           "actions": [
+             {
+               "deviceId": "device_id",
+               "command": "command",
+               "params": "command_params"
+             }
+           ]
          }
        ]
      }
      ```
 
-2. **删除场景**
-   - 方法：DELETE
-   - URL: `http://localhost:3000/api/scenes/delete/{sceneId}`
-   - 示例: `http://localhost:3000/api/scenes/delete/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+2. **添加场景**
+
+   - **URL**: `/api/scenes/add`
+   - **Method**: `POST`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
+     ```json
+     {
+       "userId": "user_id",
+       "name": "scene_name",
+       "conditions": [
+         {
+           "type": "condition_type",
+           "params": "condition_params"
+         }
+       ],
+       "actions": [
+         {
+           "deviceId": "device_id",
+           "command": "command",
+           "params": "command_params"
+         }
+       ]
+     }
+     ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Scene added successfully",
+       "scene": {
+         "sceneId": "scene_id",
+         "name": "scene_name",
+         "conditions": [
+           {
+             "type": "condition_type",
+             "params": "condition_params"
+           }
+         ],
+         "actions": [
+           {
+             "deviceId": "device_id",
+             "command": "command",
+             "params": "command_params"
+           }
+         ]
+       }
+     }
+     ```
 
 3. **更新场景**
-   - 方法：PUT
-   - URL: `http://localhost:3000/api/scenes/update`
-   - Body (JSON):
+
+   - **URL**: `/api/scenes/update`
+   - **Method**: `PUT`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Request Body**:
      ```json
      {
-       "sceneId": "场景的ObjectId",
-       "name": "新的场景名称",
+       "sceneId": "scene_id",
+       "name": "new_scene_name",
        "conditions": [
          {
-           "type": "time",
-           "params": { "hour": 6, "minute": 0 }
+           "type": "new_condition_type",
+           "params": "new_condition_params"
          }
        ],
        "actions": [
          {
-           "deviceId": "设备的ObjectId",
-           "command": "turn_on",
-           "params": {}
+           "deviceId": "device_id",
+           "command": "new_command",
+           "params": "new_command_params"
          }
        ]
      }
      ```
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Scene updated successfully",
+       "scene": {
+         "sceneId": "scene_id",
+         "name": "new_scene_name",
+         "conditions": [
+           {
+             "type": "new_condition_type",
+             "params": "new_condition_params"
+           }
+         ],
+         "actions": [
+           {
+             "deviceId": "device_id",
+             "command": "new_command",
+             "params": "new_command_params"
+           }
+         ]
+       }
+     }
+     ```
 
-4. **获取用户所有场景**
-   - 方法：GET
-   - URL: `http://localhost:3000/api/scenes/user/{userId}`
-   - 示例: `http://localhost:3000/api/scenes/user/60d2c6b60c5d2c7f1c8e2b7b`
-   - 无需 Body
+4. **删除场景**
 
-通过这些设置，你可以在 Postman 中测试场景的添加、删除、更新和获取操作，确保后端功能正常工作。
+   - **URL**: `/api/scenes/delete/:sceneId`
+   - **Method**: `DELETE`
+   - **Headers**:
+     - `Authorization: Bearer your_jwt_token`
+   - **Response**:
+     ```json
+     {
+       "success": true,
+       "message": "Scene deleted successfully"
+     }
+     ```
+
+通过上述文档，您可以在 Postman/Hoppscotch 中进行 iHome API 的各项操作。

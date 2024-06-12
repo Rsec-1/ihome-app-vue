@@ -1,10 +1,10 @@
-// src/stores/user.ts
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useUserStore = defineStore('user', {
+export const useUserStore = defineStore("user", {
   state: () => ({
-    username: localStorage.getItem('username') || '',
-    isLoggedIn: !!localStorage.getItem('isLoggedIn'),
+    username: localStorage.getItem("username") || "",
+    token: localStorage.getItem("token") || "",
+    isLoggedIn: !!localStorage.getItem("isLoggedIn"),
   }),
   getters: {
     isAuthenticated: (state) => state.isLoggedIn,
@@ -12,14 +12,20 @@ export const useUserStore = defineStore('user', {
   actions: {
     setUsername(username: string) {
       this.username = username;
-      localStorage.setItem('username', username);
+      localStorage.setItem("username", username);
       this.isLoggedIn = true;
-      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem("isLoggedIn", "true");
     },
-    clearUsername() {
-      this.username = '';
-      localStorage.removeItem('username');
-      localStorage.removeItem('isLoggedIn');
+    setToken(token: string) {
+      this.token = token;
+      localStorage.setItem("token", token);
+    },
+    clearUserData() {
+      this.username = "";
+      this.token = "";
+      localStorage.removeItem("username");
+      localStorage.removeItem("token");
+      localStorage.removeItem("isLoggedIn");
       this.isLoggedIn = false;
     },
   },

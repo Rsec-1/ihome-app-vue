@@ -14,7 +14,7 @@ const password = ref('');
 const checked = ref(false);
 const rememberPassword = ref(false);
 const router = useRouter();
-const secretKey = import.meta.env.VITE_APP_SECRET_KEY;
+const secretKey = import.meta.env.VITE_APP_SECRET_KEY; // 从环境变量中读取密钥
 
 const userStore = useUserStore();
 
@@ -45,12 +45,14 @@ const onUsernameBlur = () => {
 
 const onSubmit = async () => {
     try {
-        showLoadingToast('Logining...')
+        showLoadingToast('Logging in...');
         const response = await apiClient.post('/api/users/login', {
             username: username.value,
             password: password.value,
         });
+
         userStore.setUsername(username.value);
+        userStore.setToken(response.data.token);
 
         if (rememberPassword.value) {
             const encryptedPassword = CryptoJS.AES.encrypt(password.value, secretKey).toString();
@@ -88,7 +90,6 @@ const forgotPassword = () => {
 <template>
     <div class="login-container">
         <van-form ref="formRef" @submit="onSubmit">
-
             <van-field v-model="username" name="username" placeholder="Username" @blur="onUsernameBlur"
                 :rules="[{ required: true, message: 'Please enter username' }]" class="input-field">
                 <template #left-icon>
@@ -124,8 +125,8 @@ const forgotPassword = () => {
                             <van-checkbox v-model="checked"></van-checkbox>
                         </div>
                         <span class="agreement-text">I've read and agree to the <a href="#"
-                                class="detail-agreement">User
-                                Agreement</a> and <a href="#" class="detail-agreement">Privacy Policy</a> </span>
+                                class="detail-agreement">User Agreement</a> and <a href="#"
+                                class="detail-agreement">Privacy Policy</a> </span>
                     </div>
                 </template>
             </van-field>

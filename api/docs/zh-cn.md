@@ -183,14 +183,13 @@
      {
        "success": true,
        "data": {
-         "_id": "6668f76e39652103b1672bee",
+         "_id": "user_id",
          "username": "username",
          "email": "user@mail.com",
          "nickname": "nickname",
          "houses": [],
          "role": "user",
-         "createdAt": "2024-06-12T01:18:38.405Z",
-         "__v": 0
+         "createdAt": "created_date" // ISO 8601格式的日期
        }
      }
      ```
@@ -226,7 +225,6 @@
    - **Request Body**:
      ```json
      {
-       "userId": "user_id",
        "name": "house_name",
        "address": "house_address"
      }
@@ -407,7 +405,7 @@
        "name": "device_name",
        "type": "device_type",
        "brand": "device_brand",
-       "status": "online" // or "offline",
+       "status": "online", // or "offline"
        "location": "device_location"
      }
      ```
@@ -421,7 +419,7 @@
          "name": "device_name",
          "type": "device_type",
          "brand": "device_brand",
-         "status": "online" // or "offline",
+         "status": "online", // or "offline"
          "location": "device_location"
        }
      }
@@ -440,7 +438,7 @@
        "name": "new_device_name",
        "type": "new_device_type",
        "brand": "new_device_brand",
-       "status": "online" // or "offline",
+       "status": "online", // or "offline"
        "location": "new_device_location"
      }
      ```
@@ -454,7 +452,7 @@
          "name": "new_device_name",
          "type": "new_device_type",
          "brand": "new_device_brand",
-         "status": "online" // or "offline",
+         "status": "online", // or "offline"
          "location": "new_device_location"
        }
      }
@@ -489,7 +487,7 @@
          "name": "device_name",
          "type": "device_type",
          "brand": "device_brand",
-         "status": "online" // or "offline",
+         "status": "online", // or "offline"
          "location": "device_location"
        }
      }
@@ -564,7 +562,6 @@
    - **Request Body**:
      ```json
      {
-       "userId": "user_id",
        "name": "scene_name",
        "conditions": [
          {

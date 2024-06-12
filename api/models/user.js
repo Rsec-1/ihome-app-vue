@@ -4,12 +4,19 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   username: {
     type: String,
-    required: [true, "用户名是必填项"],
+    required: [true, "Username is required"],
     unique: true,
     minlength: 3,
   },
-  password: { type: String, required: [true, "密码是必填项"], minlength: 6 },
-  email: { type: String, match: [/.+\@.+\..+/, "请输入有效的邮箱地址"] },
+  password: {
+    type: String,
+    required: [true, "Password is required"],
+    minlength: 6,
+  },
+  email: {
+    type: String,
+    match: [/.+\@.+\..+/, "Please enter a valid email address"],
+  },
   nickname: {
     type: String,
     default: () => `User${Math.floor(Math.random() * 10000)}`,
@@ -17,6 +24,8 @@ const userSchema = new Schema({
   houses: [{ type: mongoose.Schema.Types.ObjectId, ref: "House" }],
   role: { type: String, enum: ["user", "admin"], default: "user" },
   createdAt: { type: Date, default: Date.now },
+  resetToken: String,
+  resetTokenExpiration: Date,
 });
 
 const User = mongoose.model("User", userSchema);

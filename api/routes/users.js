@@ -6,6 +6,8 @@ const {
   updatePassword,
   deleteUser,
   getAllUsers,
+  forgotPassword,
+  resetPassword,
 } = require("../controllers/userController");
 const { requireSignin, isAuth, isAdmin } = require("../middleware/auth");
 
@@ -18,5 +20,7 @@ router.put("/update", requireSignin, isAuth, updateUser); // Update user info ro
 router.put("/updatePassword", requireSignin, isAuth, updatePassword); // Update user password route
 router.delete("/delete/:userId", requireSignin, isAuth, deleteUser); // Delete user route
 router.get("/all", requireSignin, isAdmin, getAllUsers); // Get all users
+router.post("/forgot-password", forgotPassword); // Forgot password route
+router.post("/reset-password", resetPassword); // Reset password route
 
 module.exports = router;
